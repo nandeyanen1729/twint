@@ -21,7 +21,6 @@ def Tweet(config, t):
         output = output.replace("{hashtags}", ",".join(t.hashtags))
         output = output.replace("{cashtags}", ",".join(t.cashtags))
         output = output.replace("{replies}", t.replies_count)
-        output = output.replace("{retweets}", t.retweets_count)
         output = output.replace("{likes}", t.likes_count)
         output = output.replace("{link}", t.link)
         output = output.replace("{is_retweet}", str(t.retweet))
@@ -30,9 +29,7 @@ def Tweet(config, t):
         output = output.replace("{near}", t.near)
         output = output.replace("{geo}", t.geo)
         output = output.replace("{mentions}", ",".join(t.mentions))
-        output = output.replace("{translate}", t.translate)
-        output = output.replace("{trans_src}", t.trans_src)
-        output = output.replace("{trans_dest}", t.trans_dest)
+
     else:
         logme.debug(__name__+':Tweet:notFormat')
         output = f"{t.id_str} {t.datestamp} {t.timestamp} {t.timezone} "
@@ -51,8 +48,7 @@ def Tweet(config, t):
             output += f" {cashtags}"
         if config.Stats:
             output += f" | {t.replies_count} replies {t.retweets_count} retweets {t.likes_count} likes"
-        if config.Translate:
-            output += f" {t.translate} {t.trans_src} {t.trans_dest}"
+
     return output
 
 def User(_format, u):
@@ -67,9 +63,6 @@ def User(_format, u):
         output = output.replace("{join_date}", u.join_date)
         output = output.replace("{join_time}", u.join_time)
         output = output.replace("{tweets}", str(u.tweets))
-        output = output.replace("{following}", str(u.following))
-        output = output.replace("{followers}", str(u.followers))
-        output = output.replace("{likes}", str(u.likes))
         output = output.replace("{media}", str(u.media_count))
         output = output.replace("{private}", str(u.is_private))
         output = output.replace("{verified}", str(u.is_verified))

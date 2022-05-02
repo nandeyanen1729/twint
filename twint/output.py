@@ -3,7 +3,7 @@ from datetime import datetime
 from . import format, get
 from .tweet import Tweet
 from .user import User
-from .storage import db, elasticsearch, write, panda
+from .storage import write
 
 import logging as logme
 
@@ -100,33 +100,17 @@ def _output(obj, output, config, **extra):
             print("[x] Hidden tweet found, account suspended due to violation of TOS")
             return
     if config.Output != None:
-        if config.Store_csv:
-            try:
-                write.Csv(obj, config)
-                logme.debug(__name__ + ':_output:CSV')
-            except Exception as e:
-                logme.critical(__name__ + ':_output:CSV:Error:' + str(e))
-                print(str(e) + " [x] output._output")
-        elif config.Store_json:
-            write.Json(obj, config)
-            logme.debug(__name__ + ':_output:JSON')
-        else:
-            write.Text(output, config.Output)
-            logme.debug(__name__ + ':_output:Text')
-
-    if config.Elasticsearch:
-        logme.debug(__name__ + ':_output:Elasticsearch')
-        print("", end=".", flush=True)
-    else:
-        if not config.Hide_output:
-            try:
-                print(output.replace('\n', ' '))
-            except UnicodeEncodeError:
-                logme.critical(__name__ + ':_output:UnicodeEncodeError')
-                print("unicode error [x] output._output")
+        write.Text(output, config.Output)
+        logme.debug(__name__ + ':_output:Text')
+    if not config.Hide_output:
+        try:
+            print(output.replace('\n', ' '))
+        except UnicodeEncodeError:
+            logme.critical(__name__ + ':_output:UnicodeEncodeError')
+            print("unicode error [x] output._output")
 
 
-async def checkData(tweet, config, conn):
+async def checkData(tweet, config):
     logme.debug(__name__ + ':checkData')
     tweet = Tweet(tweet, config)
     if not tweet.datestamp:
@@ -135,107 +119,56 @@ async def checkData(tweet, config, conn):
         return
     if datecheck(tweet.datestamp + " " + tweet.timestamp, config):
         output = format.Tweet(config, tweet)
-        if config.Database:
-            logme.debug(__name__ + ':checkData:Database')
-            db.tweets(conn, tweet, config)
-        if config.Pandas:
-            logme.debug(__name__ + ':checkData:Pandas')
-            panda.update(tweet, config)
-        if config.Store_object:
-            logme.debug(__name__ + ':checkData:Store_object')
-            if hasattr(config.Store_object_tweets_list, 'append'):
-                config.Store_object_tweets_list.append(tweet)
-            else:
-                tweets_list.append(tweet)
-        if config.Elasticsearch:
-            logme.debug(__name__ + ':checkData:Elasticsearch')
-            elasticsearch.Tweet(tweet, config)
+        #if config.Store_object:
+        #    logme.debug(__name__ + ':checkData:Store_object')
+        #    if hasattr(config.Store_object_tweets_list, 'append'):
+        #        config.Store_object_tweets_list.append(tweet)
+        #    else:
+        #        tweets_list.append(tweet)
         _output(tweet, output, config)
     # else:
     #     logme.critical(__name__+':checkData:copyrightedTweet')
 
 
-async def Tweets(tweets, config, conn):
+async def Tweets(tweets, config):
     logme.debug(__name__ + ':Tweets')
-    if config.Favorites or config.Location:
-        logme.debug(__name__ + ':Tweets:fav+full+loc')
-        for tw in tweets:
-            await checkData(tw, config, conn)
-    elif config.TwitterSearch or config.Profile:
+    if config.TwitterSearch:
         logme.debug(__name__ + ':Tweets:TwitterSearch')
-        await checkData(tweets, config, conn)
+        await checkData(tweets, config)
     else:
         logme.debug(__name__ + ':Tweets:else')
-        if int(tweets["data-user-id"]) == config.User_id or config.Retweets:
-            await checkData(tweets, config, conn)
+        if int(tweets["data-user-id"]) == config.User_id:
+            await checkData(tweets, config)
 
 
-async def Users(u, config, conn):
+async def Users(u, config):
     logme.debug(__name__ + ':User')
     global users_list
 
     user = User(u)
     output = format.User(config.Format, user)
 
-    if config.Database:
-        logme.debug(__name__ + ':User:Database')
-        db.user(conn, config, user)
-
-    if config.Elasticsearch:
-        logme.debug(__name__ + ':User:Elasticsearch')
-        _save_date = user.join_date
-        _save_time = user.join_time
-        user.join_date = str(datetime.strptime(user.join_date, "%d %b %Y")).split()[0]
-        user.join_time = str(datetime.strptime(user.join_time, "%I:%M %p")).split()[1]
-        elasticsearch.UserProfile(user, config)
-        user.join_date = _save_date
-        user.join_time = _save_time
-
-    if config.Store_object:
-        logme.debug(__name__ + ':User:Store_object')
-
-        if hasattr(config.Store_object_follow_list, 'append'):
-            config.Store_object_follow_list.append(user)
-        elif hasattr(config.Store_object_users_list, 'append'):
-            config.Store_object_users_list.append(user)
-        else:
-            users_list.append(user)  # twint.user.user
-
-    if config.Pandas:
-        logme.debug(__name__ + ':User:Pandas+user')
-        panda.update(user, config)
+    #if config.Store_object:
+    #    logme.debug(__name__ + ':User:Store_object')
+    #    if hasattr(config.Store_object_follow_list, 'append'):
+    #        config.Store_object_follow_list.append(user)
+    #    elif hasattr(config.Store_object_users_list, 'append'):
+    #        config.Store_object_users_list.append(user)
+    #    else:
+    #        users_list.append(user)  # twint.user.user
 
     _output(user, output, config)
 
 
-async def Username(username, config, conn):
+async def Username(username, config):
     logme.debug(__name__ + ':Username')
     global _follows_object
     global follows_list
-    follow_var = config.Following * "following" + config.Followers * "followers"
 
-    if config.Database:
-        logme.debug(__name__ + ':Username:Database')
-        db.follow(conn, config.Username, config.Followers, username)
+    #if config.Store_object:
+    #    if hasattr(config.Store_object_follow_list, 'append'):
+    #        config.Store_object_follow_list.append(username)
+    #    else:
+    #        follows_list.append(username)  # twint.user.user
 
-    if config.Elasticsearch:
-        logme.debug(__name__ + ':Username:Elasticsearch')
-        elasticsearch.Follow(username, config)
-
-    if config.Store_object:
-        if hasattr(config.Store_object_follow_list, 'append'):
-            config.Store_object_follow_list.append(username)
-        else:
-            follows_list.append(username)  # twint.user.user
-
-    if config.Pandas:
-        logme.debug(__name__ + ':Username:object+pandas')
-        try:
-            _ = _follows_object[config.Username][follow_var]
-        except KeyError:
-            _follows_object.update({config.Username: {follow_var: []}})
-        _follows_object[config.Username][follow_var].append(username)
-        if config.Pandas_au:
-            logme.debug(__name__ + ':Username:object+pandas+au')
-            panda.update(_follows_object[config.Username], config)
     _output(username, username, config)

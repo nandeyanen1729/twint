@@ -37,11 +37,6 @@ def check(args):
         if args.all:
             error("Contradicting Args",
                   "--all and -u cannot be used together.")
-    elif args.search and args.timeline:
-        error("Contradicting Args",
-              "--s and --tl cannot be used together.")
-    elif args.timeline and not args.username:
-        error("Error", "-tl cannot be used without -u.")
     elif args.search is None:
         if args.custom_query is not None:
             pass
@@ -50,11 +45,6 @@ def check(args):
     elif args.all and args.userid:
         error("Contradicting Args",
               "--all and --userid cannot be used together")
-    if args.output is None:
-        if args.csv:
-            error("Error", "Please specify an output file (Example: -o file.csv).")
-        elif args.json:
-            error("Error", "Please specify an output file (Example: -o file.json).")
     if args.backoff_exponent <= 0:
         error("Error", "Please specifiy a positive value for backoff_exponent")
     if args.min_wait_time < 0:
@@ -88,45 +78,45 @@ def initialize(args):
     c.Near = args.near
     c.Lang = args.lang
     c.Output = args.output
-    c.Elasticsearch = args.elasticsearch
+    #c.Elasticsearch = args.elasticsearch
     c.Year = args.year
     c.Since = args.since
     c.Until = args.until
     c.Email = args.email
     c.Phone = args.phone
     c.Verified = args.verified
-    c.Store_csv = args.csv
-    c.Tabs = args.tabs
-    c.Store_json = args.json
+    #c.Store_csv = args.csv
+    #c.Tabs = args.tabs
+    #c.Store_json = args.json
     c.Show_hashtags = args.hashtags
     c.Show_cashtags = args.cashtags
     c.Limit = args.limit
     c.Count = args.count
     c.Stats = args.stats
-    c.Database = args.database
+    #c.Database = args.database
     c.To = args.to
     c.All = args.all
-    c.Essid = args.essid
+    #c.Essid = args.essid
     c.Format = args.format
-    c.User_full = args.user_full
+    #c.User_full = args.user_full
     # c.Profile_full = args.profile_full
-    c.Pandas_type = args.pandas_type
-    c.Index_tweets = args.index_tweets
-    c.Index_follow = args.index_follow
-    c.Index_users = args.index_users
+    #c.Pandas_type = args.pandas_type
+    #c.Index_tweets = args.index_tweets
+    #c.Index_follow = args.index_follow
+    #c.Index_users = args.index_users
     c.Debug = args.debug
-    c.Resume = args.resume
+    #c.Resume = args.resume
     c.Images = args.images
     c.Videos = args.videos
     c.Media = args.media
     c.Replies = args.replies
-    c.Pandas_clean = args.pandas_clean
-    c.Proxy_host = args.proxy_host
-    c.Proxy_port = args.proxy_port
-    c.Proxy_type = args.proxy_type
-    c.Tor_control_port = args.tor_control_port
-    c.Tor_control_password = args.tor_control_password
-    c.Retweets = args.retweets
+    #c.Pandas_clean = args.pandas_clean
+    #c.Proxy_host = args.proxy_host
+    #c.Proxy_port = args.proxy_port
+    #c.Proxy_type = args.proxy_type
+    #c.Tor_control_port = args.tor_control_port
+    #c.Tor_control_password = args.tor_control_password
+    #c.Retweets = args.retweets
     c.Custom_query = args.custom_query
     c.Popular_tweets = args.popular_tweets
     c.Skip_certs = args.skip_certs
@@ -139,8 +129,8 @@ def initialize(args):
     c.Source = args.source
     c.Members_list = args.members_list
     c.Filter_retweets = args.filter_retweets
-    c.Translate = args.translate
-    c.TranslateDest = args.translate_dest
+    #c.Translate = args.translate
+    #c.TranslateDest = args.translate_dest
     c.Backoff_exponent = args.backoff_exponent
     c.Min_wait_time = args.min_wait_time
     return c
@@ -159,7 +149,7 @@ def options():
     ap.add_argument("--location", help="Show user's location (Experimental).", action="store_true")
     ap.add_argument("-l", "--lang", help="Search for Tweets in a specific language.")
     ap.add_argument("-o", "--output", help="Save output to a file.")
-    ap.add_argument("-es", "--elasticsearch", help="Index to Elasticsearch.")
+    #ap.add_argument("-es", "--elasticsearch", help="Index to Elasticsearch.")
     ap.add_argument("--year", help="Filter Tweets before specified year.")
     ap.add_argument("--since", help="Filter Tweets sent since date (Example: \"2017-12-27 20:30:15\" or 2017-12-27).",
                     metavar="DATE")
@@ -169,9 +159,9 @@ def options():
     ap.add_argument("--phone", help="Filter Tweets that might have phone numbers", action="store_true")
     ap.add_argument("--verified", help="Display Tweets only from verified users (Use with -s).",
                     action="store_true")
-    ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
-    ap.add_argument("--tabs", help="Separate CSV fields with tab characters, not commas.", action="store_true")
-    ap.add_argument("--json", help="Write as .json file", action="store_true")
+    #ap.add_argument("--csv", help="Write as .csv file.", action="store_true")
+    #ap.add_argument("--tabs", help="Separate CSV fields with tab characters, not commas.", action="store_true")
+    #ap.add_argument("--json", help="Write as .json file", action="store_true")
     ap.add_argument("--hashtags", help="Output hashtags in seperate column.", action="store_true")
     ap.add_argument("--cashtags", help="Output cashtags in seperate column.", action="store_true")
     ap.add_argument("--userid", help="Twitter user id.")
@@ -180,65 +170,65 @@ def options():
                     action="store_true")
     ap.add_argument("--stats", help="Show number of replies, retweets, and likes.",
                     action="store_true")
-    ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3 database.")
+    #ap.add_argument("-db", "--database", help="Store Tweets in a sqlite3 database.")
     ap.add_argument("--to", help="Search Tweets to a user.", metavar="USERNAME")
     ap.add_argument("--all", help="Search all Tweets associated with a user.", metavar="USERNAME")
-    ap.add_argument("--followers", help="Scrape a person's followers.", action="store_true")
-    ap.add_argument("--following", help="Scrape a person's follows", action="store_true")
-    ap.add_argument("--favorites", help="Scrape Tweets a user has liked.", action="store_true")
-    ap.add_argument("--proxy-type", help="Socks5, HTTP, etc.")
-    ap.add_argument("--proxy-host", help="Proxy hostname or IP.")
-    ap.add_argument("--proxy-port", help="The port of the proxy server.")
-    ap.add_argument("--tor-control-port", help="If proxy-host is set to tor, this is the control port", default=9051)
-    ap.add_argument("--tor-control-password",
-                    help="If proxy-host is set to tor, this is the password for the control port",
-                    default="my_password")
-    ap.add_argument("--essid",
-                    help="Elasticsearch Session ID, use this to differentiate scraping sessions.",
-                    nargs="?", default="")
+    #ap.add_argument("--followers", help="Scrape a person's followers.", action="store_true")
+    #ap.add_argument("--following", help="Scrape a person's follows", action="store_true")
+    #ap.add_argument("--favorites", help="Scrape Tweets a user has liked.", action="store_true")
+    #ap.add_argument("--proxy-type", help="Socks5, HTTP, etc.")
+    #ap.add_argument("--proxy-host", help="Proxy hostname or IP.")
+    #ap.add_argument("--proxy-port", help="The port of the proxy server.")
+    #ap.add_argument("--tor-control-port", help="If proxy-host is set to tor, this is the control port", default=9051)
+    #ap.add_argument("--tor-control-password",
+    #                help="If proxy-host is set to tor, this is the password for the control port",
+    #                default="my_password")
+    #ap.add_argument("--essid",
+    #                help="Elasticsearch Session ID, use this to differentiate scraping sessions.",
+    #                nargs="?", default="")
     ap.add_argument("--userlist", help="Userlist from list or file.")
-    ap.add_argument("--retweets",
-                    help="Include user's Retweets (Warning: limited).",
-                    action="store_true")
+    #ap.add_argument("--retweets",
+    #                help="Include user's Retweets (Warning: limited).",
+    #                action="store_true")
     ap.add_argument("--format", help="Custom output format (See wiki for details).")
-    ap.add_argument("--user-full",
-                    help="Collect all user information (Use with followers or following only).",
-                    action="store_true")
+    #ap.add_argument("--user-full",
+    #                help="Collect all user information (Use with followers or following only).",
+    #                action="store_true")
     # I am removing this this feature for the time being, because it is no longer required, default method will do this
     # ap.add_argument("--profile-full",
     #                 help="Slow, but effective method of collecting a user's Tweets and RT.",
     #                 action="store_true")
-    ap.add_argument(
-        "-tl",
-        "--timeline",
-        help="Collects every tweet from a User's Timeline. (Tweets, RTs & Replies)",
-        action="store_true",
-    )
-    ap.add_argument("--translate",
-                    help="Get tweets translated by Google Translate.",
-                    action="store_true")
-    ap.add_argument("--translate-dest", help="Translate tweet to language (ISO2).",
-                    default="en")
-    ap.add_argument("--store-pandas", help="Save Tweets in a DataFrame (Pandas) file.")
-    ap.add_argument("--pandas-type",
-                    help="Specify HDF5 or Pickle (HDF5 as default)", nargs="?", default="HDF5")
-    ap.add_argument("-it", "--index-tweets",
-                    help="Custom Elasticsearch Index name for Tweets.", nargs="?", default="twinttweets")
-    ap.add_argument("-if", "--index-follow",
-                    help="Custom Elasticsearch Index name for Follows.",
-                    nargs="?", default="twintgraph")
-    ap.add_argument("-iu", "--index-users", help="Custom Elasticsearch Index name for Users.",
-                    nargs="?", default="twintuser")
+    #ap.add_argument(
+    #    "-tl",
+    #    "--timeline",
+    #    help="Collects every tweet from a User's Timeline. (Tweets, RTs & Replies)",
+    #    action="store_true",
+    #)
+    #ap.add_argument("--translate",
+    #                help="Get tweets translated by Google Translate.",
+    #                action="store_true")
+    #ap.add_argument("--translate-dest", help="Translate tweet to language (ISO2).",
+    #                default="en")
+    #ap.add_argument("--store-pandas", help="Save Tweets in a DataFrame (Pandas) file.")
+    #ap.add_argument("--pandas-type",
+    #                help="Specify HDF5 or Pickle (HDF5 as default)", nargs="?", default="HDF5")
+    #ap.add_argument("-it", "--index-tweets",
+    #                help="Custom Elasticsearch Index name for Tweets.", nargs="?", default="twinttweets")
+    #ap.add_argument("-if", "--index-follow",
+    #                help="Custom Elasticsearch Index name for Follows.",
+    #                nargs="?", default="twintgraph")
+    #ap.add_argument("-iu", "--index-users", help="Custom Elasticsearch Index name for Users.",
+    #                nargs="?", default="twintuser")
     ap.add_argument("--debug",
                     help="Store information in debug logs", action="store_true")
-    ap.add_argument("--resume", help="Resume from Tweet ID.", metavar="TWEET_ID")
+    #ap.add_argument("--resume", help="Resume from Tweet ID.", metavar="TWEET_ID")
     ap.add_argument("--videos", help="Display only Tweets with videos.", action="store_true")
     ap.add_argument("--images", help="Display only Tweets with images.", action="store_true")
     ap.add_argument("--media",
                     help="Display Tweets with only images or videos.", action="store_true")
     ap.add_argument("--replies", help="Display replies to a subject.", action="store_true")
-    ap.add_argument("-pc", "--pandas-clean",
-                    help="Automatically clean Pandas dataframe at every scrape.")
+    #ap.add_argument("-pc", "--pandas-clean",
+    #                help="Automatically clean Pandas dataframe at every scrape.")
     ap.add_argument("-cq", "--custom-query", help="Custom search query.")
     ap.add_argument("-pt", "--popular-tweets", help="Scrape popular tweets instead of recent ones.",
                     action="store_true")
@@ -268,66 +258,12 @@ def main():
     args = options()
     check(args)
 
-    if args.pandas_clean:
-        storage.panda.clean()
-
     c = initialize(args)
 
     if args.userlist:
         c.Query = loadUserList(args.userlist, "search")
 
-    if args.pandas_clean:
-        storage.panda.clean()
-
-    if args.favorites:
-        if args.userlist:
-            _userlist = loadUserList(args.userlist, "favorites")
-            for _user in _userlist:
-                args.username = _user
-                c = initialize(args)
-                run.Favorites(c)
-        else:
-            run.Favorites(c)
-    elif args.following:
-        if args.userlist:
-            _userlist = loadUserList(args.userlist, "following")
-            for _user in _userlist:
-                args.username = _user
-                c = initialize(args)
-                run.Following(c)
-        else:
-            run.Following(c)
-    elif args.followers:
-        if args.userlist:
-            _userlist = loadUserList(args.userlist, "followers")
-            for _user in _userlist:
-                args.username = _user
-                c = initialize(args)
-                run.Followers(c)
-        else:
-            run.Followers(c)
-    elif args.retweets:  # or args.profile_full:
-        if args.userlist:
-            _userlist = loadUserList(args.userlist, "profile")
-            for _user in _userlist:
-                args.username = _user
-                c = initialize(args)
-                run.Profile(c)
-        else:
-            run.Profile(c)
-    elif args.user_full:
-        if args.userlist:
-            _userlist = loadUserList(args.userlist, "userlist")
-            for _user in _userlist:
-                args.username = _user
-                c = initialize(args)
-                run.Lookup(c)
-        else:
-            run.Lookup(c)
-    elif args.timeline:
-        run.Profile(c)
-    else:
-        run.Search(c)
+    run.Search(c)
 
 
 def run_as_command():

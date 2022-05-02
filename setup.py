@@ -1,3 +1,4 @@
+
 #!/usr/bin/python3
 from setuptools import setup
 import io
@@ -15,8 +16,7 @@ VERSION = None
 # Packages required
 REQUIRED = [
     'aiohttp', 'aiodns', 'beautifulsoup4', 'cchardet', 'dataclasses',
-    'elasticsearch', 'pysocks', 'pandas', 'aiohttp_socks',
-    'schedule', 'geopy', 'fake-useragent', 'googletransx'
+    'schedule', 'fake-useragent'
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -49,9 +49,7 @@ setup(
         ],
     },
     install_requires=REQUIRED,
-    dependency_links=[
-        'git+https://github.com/x0rzkov/py-googletrans#egg=googletrans'
-    ],
+    dependency_links=[],
     license='MIT',
     classifiers=[
         'License :: OSI Approved :: MIT License',

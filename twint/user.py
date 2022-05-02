@@ -38,9 +38,6 @@ def User(ur):
 
     # :type `int`
     _usr.tweets = int(ur['data']['user']['legacy']['statuses_count'])
-    _usr.following = int(ur['data']['user']['legacy']['friends_count'])
-    _usr.followers = int(ur['data']['user']['legacy']['followers_count'])
-    _usr.likes = int(ur['data']['user']['legacy']['favourites_count'])
     _usr.media_count = int(ur['data']['user']['legacy']['media_count'])
 
     _usr.is_private = ur['data']['user']['legacy']['protected']

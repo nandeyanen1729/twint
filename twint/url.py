@@ -24,46 +24,6 @@ def _formatDate(date):
         return int(datetime.datetime.strptime(date, "%Y-%m-%d").timestamp())
 
 
-async def Favorites(username, init):
-    logme.debug(__name__ + ':Favorites')
-    url = f"{mobile}/{username}/favorites?lang=en"
-
-    if init != '-1':
-        url += f"&max_id={init}"
-
-    return url
-
-
-async def Followers(username, init):
-    logme.debug(__name__ + ':Followers')
-    url = f"{mobile}/{username}/followers?lang=en"
-
-    if init != '-1':
-        url += f"&cursor={init}"
-
-    return url
-
-
-async def Following(username, init):
-    logme.debug(__name__ + ':Following')
-    url = f"{mobile}/{username}/following?lang=en"
-
-    if init != '-1':
-        url += f"&cursor={init}"
-
-    return url
-
-
-async def MobileProfile(username, init):
-    logme.debug(__name__ + ':MobileProfile')
-    url = f"{mobile}/{username}?lang=en"
-
-    if init != '-1':
-        url += f"&max_id={init}"
-
-    return url
-
-
 async def Search(config, init):
     logme.debug(__name__ + ':Search')
     url = base
@@ -89,7 +49,7 @@ async def Search(config, init):
         ('send_error_codes', 'true'),
         ('simple_quoted_tweet', 'true'),
         ('count', tweet_count),
-        # ('query_source', 'typed_query'),
+        ('query_source', 'typed_query'),
         # ('pc', '1'),
         ('cursor', str(init)),
         ('spelling_corrections', '1'),
