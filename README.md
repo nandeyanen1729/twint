@@ -1,6 +1,6 @@
 # twint
 
-twint is a twitter scraping tool without using api.
+twint is a twitter scraping tool.
 
 ## Requirements
 - Python 3.6;
